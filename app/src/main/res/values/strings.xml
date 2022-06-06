@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">BarCodeScanner</string>
+    <string name="action_one_back">Undo last</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Code scanner</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="clear">Clear</string>
+    <string name="previous">Previous</string>
+
+    <string name="text_view">Value sum will be here</string>
+    <string name="input_edit_text">Scan code</string>
+    <string name="error_settings">Cannot apply setting!</string>
+
+    <string name="button_text_ok">Ok</string>
+
+    <string name="value_formatter">"%.4f kg"</string>
+</resources>
