@@ -11,6 +11,8 @@
     <string name="input_edit_text">Scan code</string>
     <string name="error_settings">Cannot apply setting!</string>
 
+    <string name="code_deleted">Code deleted</string>
+
     <string name="button_text_ok">Ok</string>
 
     <string name="value_formatter">"%.4f kg"</string>

@@ -1,4 +1,4 @@
-package com.atlasstudio.barcodescanner.ui.scanner
+package com.atlasstudio.barcodescanner.ui.codeslist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,20 +8,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.atlasstudio.barcodescanner.data.Code
 import com.atlasstudio.barcodescanner.databinding.ItemScannerBinding
 
-class ScannerAdapter(private val listener: OnItemClickListener) :
-    ListAdapter<Code, ScannerAdapter.ScannerViewHolder>(DiffCallback()) {
+class CodesListAdapter(private val listener: OnItemClickListener) :
+    ListAdapter<Code, CodesListAdapter.CodesListViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScannerViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CodesListViewHolder {
         val binding = ItemScannerBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ScannerViewHolder(binding)
+        return CodesListViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ScannerViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CodesListViewHolder, position: Int) {
         val currentItem = getItem(position)
         holder.bind(currentItem)
     }
 
-    inner class ScannerViewHolder(private val binding: ItemScannerBinding) :
+    inner class CodesListViewHolder(private val binding: ItemScannerBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {

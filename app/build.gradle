@@ -53,6 +53,9 @@ dependencies {
     // Fragment
     implementation "androidx.fragment:fragment-ktx:$fragmentVersion"
 
+    // Layouts
+    implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
+
     // Lifecycle + ViewModel & LiveData
     //implementation "androidx.lifecycle:lifecycle-*:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion"

@@ -3,6 +3,7 @@ package com.atlasstudio.barcodescanner.ui.scanner
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
+import com.atlasstudio.barcodescanner.R
 import com.atlasstudio.barcodescanner.data.Code
 import com.atlasstudio.barcodescanner.data.CodeType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,6 +37,11 @@ class ScannerViewModel @Inject constructor(
     fun onReady() {
     }
 
+    fun onCodeDelete(position: Int) {
+        codes.removeAt(position)
+        showIdToast(R.string.code_deleted)
+    }
+
     private fun initialize() {
         codes = mutableListOf()
         state.value = ScannerFragmentState.Init
@@ -51,11 +57,12 @@ class ScannerViewModel @Inject constructor(
             }
             CodeType.None -> divider = 1.0f
         }
-        if(code.length == length) {
-            sum.value += code.subSequence(startIndex.value, endIndex.value).toString()
-                .toFloat() / divider
+        //if(code.length == length) {
+            //sum.value += code.subSequence(startIndex.value, endIndex.value).toString()
+            //    .toFloat() / divider
+            sum.value += code.toString().toFloat()
             codes.add(Code(code, codeType.value))
-        }
+        //}
     }
 
     fun clearSum() {
@@ -74,6 +81,10 @@ class ScannerViewModel @Inject constructor(
         state.value = ScannerFragmentState.ShowToast(message)
     }
 
+    private fun showIdToast(messageId: Int){
+        state.value = ScannerFragmentState.ShowIdToast(messageId)
+    }
+
     private fun navigateToSettings() {
         state.value = ScannerFragmentState.NavigateToSettings
     }
@@ -83,5 +94,6 @@ sealed class ScannerFragmentState {
     object Init : ScannerFragmentState()
     //data class IsLoading(val isLoading : Boolean) : ScannerFragmentState()
     data class ShowToast(val message : String) : ScannerFragmentState()
+    data class ShowIdToast(val messageId : Int) : ScannerFragmentState()
     object NavigateToSettings : ScannerFragmentState()
 }

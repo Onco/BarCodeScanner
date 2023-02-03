@@ -16,12 +16,12 @@
         android:maxLines="1"
         tools:text="Example Code" />
 
-    <!--ImageView
+    <ImageView
         android:id="@+id/button_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_delete" /-->
+        android:src="@android:drawable/ic_menu_delete" />
 
 </RelativeLayout>
