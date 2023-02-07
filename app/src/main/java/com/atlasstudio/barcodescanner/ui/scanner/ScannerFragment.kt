@@ -1,25 +1,27 @@
 package com.atlasstudio.barcodescanner.ui.scanner
 
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.InputType
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.ui.res.stringResource
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.atlasstudio.barcodescanner.R
 import com.atlasstudio.barcodescanner.data.Code
 import com.atlasstudio.barcodescanner.databinding.FragmentScannerBinding
-import com.atlasstudio.barcodescanner.ui.scanner.ScannerAdapter
-import com.atlasstudio.barcodescanner.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -29,7 +31,48 @@ import kotlinx.coroutines.launch
 class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
 
     private var mBinding: FragmentScannerBinding? = null
+    private var editTextListenerEnabled: Boolean = true
     private val viewModel: ScannerViewModel by viewModels()
+    private lateinit var intentFilter: IntentFilter
+
+    protected var broadcatReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if ("add-to-sum".equals(intent.action)) {
+                viewModel.addCurrentToSum()
+                binding.textView.text = String.format(getString(R.string.value_formatter), viewModel.mSum.value)
+                binding.editText.hint = getString(R.string.input_edit_text)
+                binding.editText.text.clear()
+            }
+            if ("clear-sum".equals(intent.action)) {
+                viewModel.clearSum()
+                viewModel.setCurrentNumber("")
+                binding.textView.text = ""
+                binding.editText.text.clear()
+                binding.editText.hint = getString(R.string.input_edit_text)
+            }
+            if ("clear-number".equals(intent.action)) {
+                editTextListenerEnabled = false
+                binding.editText.setText(viewModel.mCurrentNumber.value.dropLast(1))
+                editTextListenerEnabled = true
+                viewModel.setCurrentNumber(viewModel.mCurrentNumber.value.dropLast(1))
+            }
+            if("concat-to-number".equals((intent.action)))
+            {
+                val num = intent.getIntExtra("singleNumber", 0).toString()
+                editTextListenerEnabled = false
+                binding.editText.setText(viewModel.mCurrentNumber.value.plus(num))
+                editTextListenerEnabled = true
+                viewModel.setCurrentNumber(viewModel.mCurrentNumber.value.plus(num))
+            }
+            if("decimal-separator".equals(intent.action))
+            {
+                editTextListenerEnabled = false
+                binding.editText.setText(viewModel.mCurrentNumber.value.plus("."))
+                editTextListenerEnabled = true
+                viewModel.setCurrentNumber(viewModel.mCurrentNumber.value.plus("."))
+            }
+        }
+    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -85,7 +128,7 @@ class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
 
         binding.editText.inputType = InputType.TYPE_NULL
 
-        if (viewModel.mSum.value != 0.0f) {
+        if (viewModel.mSum.value != 0.0) {
             binding.textView.text = String.format(getString(R.string.value_formatter), viewModel.mSum.value)
         }
 
@@ -94,13 +137,14 @@ class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
         binding.buttonClear.setOnClickListener {
             //findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
             viewModel.clearSum()
+            viewModel.setCurrentNumber("")
             binding.textView.text = ""
             binding.editText.text.clear()
             binding.editText.hint = getString(R.string.input_edit_text)
         }
 
         binding.editText.addTextChangedListener {
-            if (binding.editText.text.isNotEmpty()) {
+            if (editTextListenerEnabled && binding.editText.text.isNotEmpty()) {
                 viewModel.addCodeToSumAndList(binding.editText.text.toString())
                 binding.textView.text = String.format(getString(R.string.value_formatter), viewModel.mSum.value)
                 binding.editText.hint = binding.editText.text
@@ -115,6 +159,12 @@ class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
             }
         }
 
+        intentFilter = IntentFilter("add-to-sum")
+        intentFilter.addAction("clear-sum")
+        intentFilter.addAction("clear-number")
+        intentFilter.addAction("concat-to-number")
+        intentFilter.addAction("decimal-separator")
+        LocalBroadcastManager.getInstance(context!!).registerReceiver(broadcatReceiver, intentFilter);
         observe()
     }
 

@@ -1,5 +1,6 @@
 package com.atlasstudio.barcodescanner.ui.scanner
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
@@ -16,10 +17,13 @@ class ScannerViewModel @Inject constructor(
     private val state = MutableStateFlow<ScannerFragmentState>(ScannerFragmentState.Init)
     val mState: StateFlow<ScannerFragmentState> get() = state
 
-    private var sum = MutableStateFlow<Float>(0.0f)
-    val mSum: StateFlow<Float> get() = sum
+    private var sum = MutableStateFlow<Double>(0.0)
+    val mSum: StateFlow<Double> get() = sum
 
-    private lateinit var codes : MutableList<Code?>
+    private var currentNumber = MutableStateFlow<String>("")
+    val mCurrentNumber: StateFlow<String> get() = currentNumber
+
+    private var codes : MutableList<Code?> = mutableListOf()
 
     private var startIndex = MutableStateFlow<Int>(7)
     private var endIndex = MutableStateFlow<Int>(12)
@@ -37,29 +41,52 @@ class ScannerViewModel @Inject constructor(
     }
 
     private fun initialize() {
-        codes = mutableListOf()
         state.value = ScannerFragmentState.Init
+        clearSum()
     }
 
     fun addCodeToSumAndList(code : String) {
-        var divider : Float = 1.0f
+        var divider : Double = 1.0
         var length : Int = 0
         when (codeType.value) {
             CodeType.EAN13 ->  {
-                divider = 1000.0f
+                divider = 1000.0
                 length = 13
             }
-            CodeType.None -> divider = 1.0f
+            CodeType.None -> divider = 1.0
         }
         if(code.length == length) {
             sum.value += code.subSequence(startIndex.value, endIndex.value).toString()
-                .toFloat() / divider
+                .toDouble() / divider
             codes.add(Code(code, codeType.value))
+        }
+        currentNumber.value = ""
+    }
+
+    fun addCurrentToSum() {
+        if(!currentNumber.value.isEmpty()) {
+            val toCheck = currentNumber.value.toDoubleOrNull() ?: 0.0
+            if (toCheck >= 0.0001) {
+                sum.value += toCheck
+            }
+            currentNumber.value = ""
         }
     }
 
     fun clearSum() {
-        sum.value = 0.0f
+        sum.value = 0.0
+        codes.clear()
+        currentNumber.value = ""
+    }
+
+    fun setCurrentNumber(number: String) {
+        if (number.toDoubleOrNull() != null || number == ".") {
+            currentNumber.value = number
+        }
+        else if(number.isEmpty())
+        {
+            currentNumber.value = ""
+        }
     }
 
     /*private fun setLoading(){
