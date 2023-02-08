@@ -112,12 +112,12 @@ class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                    val code = scannerAdapter.currentList[viewHolder.adapterPosition]
-                    /*code.let {
+                    /*val code = scannerAdapter.currentList[viewHolder.adapterPosition]
+                    code.let {
                         viewModel.onCodeDelete(code)
                     }*/
                 }
-            }).attachToRecyclerView(recyclerViewScanner!!)
+            }).attachToRecyclerView(recyclerViewScanner)
         }
 
         lifecycle.coroutineScope.launch {
@@ -185,6 +185,8 @@ class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
     private fun handleState(state: ScannerFragmentState){
         when(state){
             is ScannerFragmentState.Init -> Unit
+            is ScannerFragmentState.NavigateToSettings -> Unit
+            is ScannerFragmentState.ShowToast -> Unit
             //is ScannerFragmentState.SnackBarCodeDeleted -> handleDeletedSnackBar()
         }
     }
