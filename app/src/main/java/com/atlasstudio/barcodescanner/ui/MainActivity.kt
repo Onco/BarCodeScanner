@@ -66,27 +66,12 @@ class MainActivity : AppCompatActivity() {
         val action = event!!.action
         val keyCode = event.keyCode
         return when (keyCode) {
-            KeyEvent.KEYCODE_DPAD_CENTER,
-            KeyEvent.KEYCODE_ENTER,
-            KeyEvent.KEYCODE_NUMPAD_ENTER,
-            KeyEvent.KEYCODE_PLUS,
-            KeyEvent.KEYCODE_NUMPAD_ADD -> {
-                if (action == KeyEvent.ACTION_UP) {
-                    sendAddBroadcast()
-                }
-                true
-            }
-            KeyEvent.KEYCODE_ESCAPE -> {
+            KeyEvent.KEYCODE_ESCAPE,
+            KeyEvent.KEYCODE_CLEAR,
+            KeyEvent.KEYCODE_DEL,
+            KeyEvent.KEYCODE_FORWARD_DEL -> {
                 if (action == KeyEvent.ACTION_UP) {
                     sendClearSumBroadcast()
-                }
-                true
-            }
-            KeyEvent.KEYCODE_DEL, // Backspace key
-            KeyEvent.KEYCODE_FORWARD_DEL, // Delete key
-            KeyEvent.KEYCODE_CLEAR -> {
-                if (action == KeyEvent.ACTION_UP) {
-                    sendClearCurrentBroadcast()
                 }
                 true
             }
@@ -99,12 +84,7 @@ class MainActivity : AppCompatActivity() {
             KeyEvent.KEYCODE_6,
             KeyEvent.KEYCODE_7,
             KeyEvent.KEYCODE_8,
-            KeyEvent.KEYCODE_9 -> {
-                if (action == KeyEvent.ACTION_UP) {
-                    sendNumberBroadcast(keyCode - 7)
-                }
-                true
-            }
+            KeyEvent.KEYCODE_9,
             KeyEvent.KEYCODE_NUMPAD_0,
             KeyEvent.KEYCODE_NUMPAD_1,
             KeyEvent.KEYCODE_NUMPAD_2,
@@ -114,35 +94,25 @@ class MainActivity : AppCompatActivity() {
             KeyEvent.KEYCODE_NUMPAD_6,
             KeyEvent.KEYCODE_NUMPAD_7,
             KeyEvent.KEYCODE_NUMPAD_8,
-            KeyEvent.KEYCODE_NUMPAD_9 -> {
-                if (action == KeyEvent.ACTION_UP) {
-                    sendNumberBroadcast(keyCode - 144)
-                }
-                true
-            }
-            KeyEvent.KEYCODE_COMMA,
-            KeyEvent.KEYCODE_PERIOD,
-            KeyEvent.KEYCODE_NUMPAD_DOT -> {
-                if (action == KeyEvent.ACTION_UP) {
-                    sendDecimalsBroadcast()
-                }
-                true
+            KeyEvent.KEYCODE_NUMPAD_9,
+            KeyEvent.KEYCODE_UNKNOWN -> {
+                super.dispatchKeyEvent(event)
             }
             else -> true
         }
     }
 
-    private fun sendAddBroadcast() {
+    /*private fun sendAddBroadcast() {
         val intent = Intent("add-to-sum")
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-    }
+    }*/
 
     private fun sendClearSumBroadcast() {
         val intent = Intent("clear-sum")
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
-    private fun sendClearCurrentBroadcast() {
+    /*private fun sendClearCurrentBroadcast() {
         val intent = Intent("clear-number")
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
@@ -156,5 +126,5 @@ class MainActivity : AppCompatActivity() {
     private fun sendDecimalsBroadcast() {
         val intent = Intent("decimal-separator")
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-    }
+    }*/
 }

@@ -20,14 +20,14 @@ class ScannerViewModel @Inject constructor(
     private var sum = MutableStateFlow<Double>(0.0)
     val mSum: StateFlow<Double> get() = sum
 
-    private var currentNumber = MutableStateFlow<String>("")
-    val mCurrentNumber: StateFlow<String> get() = currentNumber
+    /*private var currentNumber = MutableStateFlow<String>("")
+    val mCurrentNumber: StateFlow<String> get() = currentNumber*/
 
     private var codes : MutableList<Code?> = mutableListOf()
 
     private var startIndex = MutableStateFlow<Int>(7)
     private var endIndex = MutableStateFlow<Int>(12)
-    private var codeType = MutableStateFlow<CodeType>(CodeType.EAN13)
+    private var codeType = MutableStateFlow<CodeType>(CodeType.EAN13) // TBD: possibly can process different codes
 
     suspend fun createScannerFlow(): Flow<MutableList<Code?>> {
         return flowOf(codes)
@@ -60,10 +60,10 @@ class ScannerViewModel @Inject constructor(
                 .toDouble() / divider
             codes.add(Code(code, codeType.value))
         }
-        currentNumber.value = ""
+        //currentNumber.value = ""
     }
 
-    fun addCurrentToSum() {
+    /*fun addCurrentToSum() {
         if(!currentNumber.value.isEmpty()) {
             val toCheck = currentNumber.value.toDoubleOrNull() ?: 0.0
             if (toCheck >= 0.0001) {
@@ -71,15 +71,15 @@ class ScannerViewModel @Inject constructor(
             }
             currentNumber.value = ""
         }
-    }
+    }*/
 
     fun clearSum() {
         sum.value = 0.0
         codes.clear()
-        currentNumber.value = ""
+        //currentNumber.value = ""
     }
 
-    fun setCurrentNumber(number: String) {
+    /*fun setCurrentNumber(number: String) {
         if (number.toDoubleOrNull() != null || number == ".") {
             currentNumber.value = number
         }
@@ -87,7 +87,7 @@ class ScannerViewModel @Inject constructor(
         {
             currentNumber.value = ""
         }
-    }
+    }*/
 
     /*private fun setLoading(){
         state.value = ScannerFragmentState.IsLoading(true)
