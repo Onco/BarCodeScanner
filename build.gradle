@@ -4,12 +4,12 @@ buildscript {
     ext {
         // SDK and tools
         minSdkVersion = 28
-        targetSdkVersion = 32
-        compileSdkVersion = 32
+        targetSdkVersion = 33
+        compileSdkVersion = 33
 
         // App dependencies
-        gradleVersion = '7.2.1'
-        kotlinVersion = "1.6.0"
+        gradleVersion = '7.4.1'
+        kotlinVersion = "1.7.20"
         appCompatVersion = "1.4.0"
 
         materialVersion = "1.4.0"
@@ -28,6 +28,9 @@ buildscript {
         hiltAndroidXVersion = "1.0.0"
         hiltVersion = "2.40.1"
         kaptVersion = "2.40.1"
+
+        composeBom = "2022.10.00"
+        accompanistThemeadapterMaterial = "0.28.0"
     }
     repositories {
         google()
@@ -45,8 +48,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '7.2.1' apply false
-    id 'com.android.library' version '7.2.1' apply false
+    id 'com.android.application' version '7.4.1' apply false
+    id 'com.android.library' version '7.4.1' apply false
     id 'org.jetbrains.kotlin.android' version '1.6.21' apply false
 }
 
