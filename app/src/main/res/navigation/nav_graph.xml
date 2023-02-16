@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.atlasstudio.barcodescanner.ui.codeslist.CodesListFragment"
+        android:name="com.atlasstudio.barcodescanner.ui.scanner.ScannerFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_codes_list">
+        tools:layout="@layout/fragment_scanner">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"

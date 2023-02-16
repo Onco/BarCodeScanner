@@ -106,6 +106,7 @@ class CodesListFragment : Fragment(), CodesListAdapter.OnItemClickListener {
             is CodesListFragmentState.Init -> Unit
             is CodesListFragmentState.ShowToast -> handleSnackBar(state.message)
             is CodesListFragmentState.ShowIdToast -> handleSnackBar(getString(state.messageId))
+            is CodesListFragmentState.NavigateToSettings -> Unit
         }
     }
 

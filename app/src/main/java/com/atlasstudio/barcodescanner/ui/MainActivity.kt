@@ -3,8 +3,6 @@ package com.atlasstudio.barcodescanner.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
@@ -39,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         //removing the shadow from the action bar
         supportActionBar?.elevation = 0f
 
-        val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_codeslist) as NavHostFragment
+        val navFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         navController = navFragment.navController
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -67,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_codeslist)
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }

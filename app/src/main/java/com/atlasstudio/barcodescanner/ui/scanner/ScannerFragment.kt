@@ -19,13 +19,17 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.atlasstudio.barcodescanner.R
+import com.atlasstudio.barcodescanner.data.Code
 import com.atlasstudio.barcodescanner.databinding.FragmentScannerBinding
+import com.atlasstudio.barcodescanner.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import java.util.Scanner
 
 @AndroidEntryPoint
-class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
+class ScannerFragment : Fragment(), ScannerAdapter.OnItemClickListener {
 
     private var mBinding: FragmentScannerBinding? = null
     //private var editTextListenerEnabled: Boolean = true
@@ -79,7 +83,7 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        (activity as CodesListFragment).setOnBottomSheetCallbacks(this)
+        //(activity as CodesListFragment).setOnBottomSheetCallbacks(this)
 
         mBinding = FragmentScannerBinding.inflate(inflater, container, false)
         return binding.root
@@ -119,11 +123,11 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
             }).attachToRecyclerView(recyclerViewScanner)
         }
 
-        lifecycle.coroutineScope.launch {
+        /*lifecycle.coroutineScope.launch {
             viewModel.createScannerFlow().collect() {
                 scannerAdapter.submitList(it)
             }
-        }
+        }*/
 
         binding.editText.inputType = InputType.TYPE_NULL
 
@@ -134,7 +138,7 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
         binding.editText.requestFocus()
 
         binding.editText.setOnClickListener {
-            (activity as CodesListFragment).closeBottomSheet()
+            //(activity as CodesListFragment).closeBottomSheet()
         }
 
         binding.buttonClear.setOnClickListener {
@@ -145,11 +149,11 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
             binding.editText.text.clear()
             binding.editText.hint = getString(R.string.input_edit_text)
 
-            if (currentState == BottomSheetBehavior.STATE_EXPANDED) {
+            /*if (currentState == BottomSheetBehavior.STATE_EXPANDED) {
                 (activity as CodesListFragment).closeBottomSheet()
             } else  {
                 (activity as CodesListFragment).openBottomSheet()
-            }
+            }*/
         }
 
         binding.editText.addTextChangedListener {
@@ -195,9 +199,22 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
             is ScannerFragmentState.Init -> Unit
             is ScannerFragmentState.NavigateToSettings -> Unit
             is ScannerFragmentState.ShowToast -> Unit
+            is ScannerFragmentState.ShowIdToast -> Unit
             //is ScannerFragmentState.SnackBarCodeDeleted -> handleDeletedSnackBar()
         }
     }
+
+    override fun onItemClick(position: Int) {
+        // TBD
+    }
+
+    override fun onButtonDeleteClick(position: Int) {
+        viewModel.onCodeDelete(position)
+    }
+
+    /*private fun handleDeletedSnackBar() {
+        requireActivity().showToast(getString(R.string.location_deleted_confirmation))
+    }*/
 
     private fun handleSnackBar(message: String) {
         requireActivity().showToast(message)
@@ -208,7 +225,7 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
         mBinding = null
     }
 
-    override fun onStateChanged(bottomSheet: View, newState: Int) {
+    /*override fun onStateChanged(bottomSheet: View, newState: Int) {
         currentState = newState
         when (newState) {
             BottomSheetBehavior.STATE_EXPANDED -> {
@@ -216,5 +233,5 @@ class ScannerFragment : BottomSheetDialogFragment(), OnBottomSheetCallbacks {
             BottomSheetBehavior.STATE_COLLAPSED -> {
             }
         }
-    }
+    }*/
 }
